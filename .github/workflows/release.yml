@@ -1,0 +1,42 @@
+name: release
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - trunk
+    paths-ignore:
+      - README.md
+      - LICENSE
+  pull_request:
+    branches:
+      - trunk
+    paths-ignore:
+      - README.md
+      - LICENSE
+jobs:
+  test-latest:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: setup
+        uses: ./
+      - name: check version
+        run: nomad --version
+  release:
+    needs:
+      - test-latest
+    runs-on: ubuntu-latest
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: github release
+        run: |
+          gh release create ${{ github.ref_name }} --title ${{ github.ref_name }} --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

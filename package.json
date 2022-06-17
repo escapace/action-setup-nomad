@@ -1,0 +1,77 @@
+{
+  "name": "@escapace/setup-nomad",
+  "description": "",
+  "version": "0.0.0",
+  "author": "escapace <opensource@escapace.com>",
+  "bugs": "https://github.com/escapace/setup-nomad/issues",
+  "dependencies": {
+    "@actions/core": "^1.9.0",
+    "@actions/github": "^5.0.3",
+    "@actions/io": "^1.1.2",
+    "@actions/tool-cache": "^2.0.1",
+    "@hashicorp/js-releases": "^1.6.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "17.0.2",
+    "@commitlint/config-conventional": "17.0.2",
+    "@ls-lint/ls-lint": "1.11.2",
+    "@types/chai": "4.3.1",
+    "@types/lodash-es": "4.17.6",
+    "@types/mocha": "9.1.1",
+    "@types/node": "18.0.0",
+    "@typescript-eslint/eslint-plugin": "5.28.0",
+    "@typescript-eslint/parser": "5.28.0",
+    "arg": "5.0.2",
+    "c8": "7.11.3",
+    "chai": "4.3.6",
+    "esbuild": "0.14.45",
+    "eslint": "8.17.0",
+    "eslint-config-escapace": "3.13.0",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-editorconfig": "3.2.0",
+    "eslint-plugin-no-null": "1.0.2",
+    "execa": "6.1.0",
+    "fast-glob": "3.2.11",
+    "fs-extra": "10.1.0",
+    "husky": "8.0.1",
+    "is-ci": "3.0.1",
+    "lint-staged": "13.0.2",
+    "lodash-es": "4.17.21",
+    "mocha": "10.0.0",
+    "prettier": "2.7.1",
+    "prettier-config-escapace": "1.0.4",
+    "semver": "7.3.7",
+    "syncpack": "8.0.0",
+    "typescript": "4.7.3"
+  },
+  "engines": {
+    "node": ">= 16.15.1",
+    "pnpm": ">= 7.1.7"
+  },
+  "exports": {
+    ".": {
+      "require": "./lib/cjs/index.cjs"
+    }
+  },
+  "files": [
+    "lib/cjs",
+    "lib/types"
+  ],
+  "homepage": "https://github.com/escapace/setup-nomad",
+  "license": "MPL-2.0",
+  "main": "lib/cjs/index.mjs",
+  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/escapace/setup-nomad.git",
+  "scripts": {
+    "build": "node ./scripts/build.mjs",
+    "lint": "ls-lint && eslint 'src/**/*.ts'",
+    "prepare": "is-ci || husky install",
+    "test": "node ./scripts/test.mjs && c8 mocha --enable-source-maps 'lib/tests/**/*.spec.js'",
+    "typecheck": "tsc --noEmit"
+  },
+  "sideEffects": false,
+  "type": "commonjs"
+}
