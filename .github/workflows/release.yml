@@ -20,11 +20,14 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        version: ["^1.2.0", "latest"]
     steps:
       - name: checkout
         uses: actions/checkout@v3
       - name: setup
         uses: ./
+        with:
+          nomad-version: ${{ matrix.version }}
       - name: check version
         run: nomad --version
   release:

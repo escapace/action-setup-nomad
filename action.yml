@@ -3,7 +3,7 @@ description: 'Sets up HashiCorp Nomad in your GitHub Actions workflow.'
 author: 'Escapace'
 inputs:
   nomad-version:
-    description: 'The version of Nomad to install. Instead of full version string you can also specify constraint string starting with "<" (for example `<1.13.0`) to install the latest version satisfying the constraint. A value of `latest` will install the latest version of Nomad. Defaults to `latest`.'
+    description: 'The version of Nomad to install. Instead of full version string you can also specify a semantic version range (for example `^1.3.1`) to install the latest version satisfying the constraint. A value of `latest` will install the latest version of Nomad. Defaults to `latest`.'
     default: 'latest'
     required: false
 runs:

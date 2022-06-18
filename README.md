@@ -7,9 +7,9 @@ Sets up HashiCorp Nomad.
 ## `version`
 
 **Optional** The version of Nomad to install. Instead of full version string you
-can also specify constraint string starting with "<" (for example `<1.13.0`) to
-install the latest version satisfying the constraint. A value of `latest` will
-install the latest version of Nomad. Defaults to `latest`.
+can also specify a semantic version range (for example `^1.3.1`) to install the
+latest version satisfying the constraint. A value of `latest` will install the
+latest version of Nomad. Defaults to `latest`.
 
 ## Example usage
 
