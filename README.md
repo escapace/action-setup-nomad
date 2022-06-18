@@ -4,7 +4,7 @@ Sets up HashiCorp Nomad.
 
 ### Inputs
 
-#### `version`
+#### `nomad-version`
 
 **Optional** The version of Nomad to install. Instead of full version string you
 can also specify a semantic version range (for example `^1.3.1`) to install the
