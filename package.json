@@ -4,16 +4,12 @@
   "version": "0.0.0",
   "author": "escapace <opensource@escapace.com>",
   "bugs": "https://github.com/escapace/setup-nomad/issues",
-  "dependencies": {
-    "@actions/core": "^1.9.0",
-    "@actions/github": "^5.0.3",
-    "@actions/io": "^1.1.2",
-    "@actions/tool-cache": "^2.0.1",
-    "@hashicorp/js-releases": "^1.6.0"
-  },
   "devDependencies": {
+    "@actions/core": "1.9.0",
+    "@actions/tool-cache": "2.0.1",
     "@commitlint/cli": "17.0.2",
     "@commitlint/config-conventional": "17.0.2",
+    "@hashicorp/js-releases": "1.6.0",
     "@ls-lint/ls-lint": "1.11.2",
     "@types/chai": "4.3.1",
     "@types/lodash-es": "4.17.6",
