@@ -1,6 +1,6 @@
 import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
-import releases from '@hashicorp/js-releases'
+import { getRelease } from '@hashicorp/js-releases'
 import { isError, isString } from 'lodash-es'
 import os from 'os'
 
@@ -65,7 +65,7 @@ export async function run() {
 
     core.debug(`Finding releases for Nomad version ${version}`)
 
-    const release = await releases.getRelease('nomad', version, USER_AGENT)
+    const release = await getRelease('nomad', version, USER_AGENT)
 
     core.debug(
       `Getting build for Nomad version ${release.version}: ${platform} ${arch}`
