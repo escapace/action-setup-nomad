@@ -1,15 +1,20 @@
 # setup-nomad
 
-This action prints "Hello World" or "Hello" + the name of a person to greet to the log.
+Sets up HashiCorp Nomad.
 
 ## Inputs
 
-## `who-to-greet`
+## `version`
 
-**Required** The name of the person to greet. Default `"World"`.
+**Optional** The version of Nomad to install. Instead of full version string you
+can also specify constraint string starting with "<" (for example `<1.13.0`) to
+install the latest version satisfying the constraint. A value of `latest` will
+install the latest version of Nomad. Defaults to `latest`.
 
 ## Example usage
 
-uses: actions/hello-world-javascript-action@v1.1
+```yaml
+uses: escapace/setup-nomad@v0.1.0
 with:
-who-to-greet: 'Mona the Octocat'
+  nomad-version: 'Mona the Octocat'
+```
