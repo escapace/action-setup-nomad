@@ -1,7 +1,7 @@
 import * as core from '@actions/core'
 import * as tc from '@actions/tool-cache'
 import { getRelease } from '@hashicorp/js-releases'
-import { isError, isString } from 'lodash-es'
+import { isError, isString, isEmpty } from 'lodash-es'
 import os from 'os'
 
 const mapArch = (arch: string): string =>
@@ -80,14 +80,16 @@ export async function run() {
       )
     }
 
-    core.addPath(
-      tc.find('nomad', release.version, arch) ??
-        (await download(
-          build.url,
-          async (zipFile: string) =>
-            await release.verify(zipFile, build.filename)
-        ))
-    )
+    let toolPath = tc.find('nomad', release.version, arch)
+
+    if (!isString(toolPath) || isEmpty(toolPath)) {
+      toolPath = await download(
+        build.url,
+        async (zipFile: string) => await release.verify(zipFile, build.filename)
+      )
+    }
+
+    core.addPath(toolPath)
   } catch (error) {
     if (isError(error)) {
       core.setFailed(error.message)
