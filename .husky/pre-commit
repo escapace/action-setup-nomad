@@ -6,9 +6,13 @@ pnpm exec syncpack set-semver-ranges || exit 1
 pnpm exec syncpack format || exit 1
 
 pnpm install
-git add package.json pnpm-lock.yaml
 
 pnpm exec ls-lint || exit 1
 pnpm exec lint-staged || exit 1
 pnpm run typecheck || exit 1
 pnpm run build || exit
+
+git add \
+  package.json \
+  pnpm-lock.yaml \
+  lib/cjs
