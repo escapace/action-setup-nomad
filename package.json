@@ -21,7 +21,7 @@
     "@typescript-eslint/eslint-plugin": "5.33.1",
     "@typescript-eslint/parser": "5.33.1",
     "arg": "5.0.2",
-    "c8": "7.12.0",
+    "c8": "8.0.1",
     "chai": "4.3.6",
     "esbuild": "0.15.5",
     "eslint": "8.22.0",
