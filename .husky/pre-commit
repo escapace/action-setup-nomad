@@ -11,3 +11,4 @@ git add package.json pnpm-lock.yaml
 pnpm exec ls-lint || exit 1
 pnpm exec lint-staged || exit 1
 pnpm run typecheck || exit 1
+pnpm run build || exit
