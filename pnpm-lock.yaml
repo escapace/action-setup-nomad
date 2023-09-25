@@ -21,8 +21,8 @@ devDependencies:
     specifier: 1.6.1
     version: 1.6.1
   '@ls-lint/ls-lint':
-    specifier: 1.11.2
-    version: 1.11.2
+    specifier: 2.1.0
+    version: 2.1.0
   '@types/chai':
     specifier: 4.3.3
     version: 4.3.3
@@ -439,9 +439,9 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
-  /@ls-lint/ls-lint@1.11.2:
-    resolution: {integrity: sha512-kX+CCjgNz+NHCaOcFyJLSBLRgAoyOxN18QFLpgucz5ILvbr60BGjwKaoPYTv/rBV/77L+Oz82lpP24mzJ2wGsQ==}
-    cpu: [x64, arm64]
+  /@ls-lint/ls-lint@2.1.0:
+    resolution: {integrity: sha512-WvyZf2TKUstZYVetDFbQF1kp5Wd2AJX50nqsmewwrHpEcLVCU8RDoqfBBnYHoaBxTRZcWjfNnnuLCBofkH5nEA==}
+    cpu: [x64, arm64, s390x]
     os: [darwin, linux, win32]
     hasBin: true
     dev: true

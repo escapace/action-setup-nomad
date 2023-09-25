@@ -13,7 +13,7 @@
     "@commitlint/cli": "17.0.3",
     "@commitlint/config-conventional": "17.0.3",
     "@hashicorp/js-releases": "1.6.1",
-    "@ls-lint/ls-lint": "1.11.2",
+    "@ls-lint/ls-lint": "2.1.0",
     "@types/chai": "4.3.3",
     "@types/lodash-es": "4.17.6",
     "@types/mocha": "10.0.0",
