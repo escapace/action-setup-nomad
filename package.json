@@ -1,12 +1,12 @@
 {
-  "name": "@escapace/setup-nomad",
+  "name": "@escapace/action-setup-nomad",
   "description": "",
   "version": "0.0.0",
   "author": {
     "name": "escapace",
     "email": "opensource@escapace.com"
   },
-  "bugs": "https://github.com/escapace/setup-nomad/issues",
+  "bugs": "https://github.com/escapace/action-setup-nomad/issues",
   "devDependencies": {
     "@actions/core": "1.10.1",
     "@actions/tool-cache": "2.0.1",
@@ -56,14 +56,14 @@
     "lib/cjs",
     "lib/types"
   ],
-  "homepage": "https://github.com/escapace/setup-nomad",
+  "homepage": "https://github.com/escapace/action-setup-nomad",
   "license": "MPL-2.0",
   "main": "lib/cjs/index.mjs",
   "private": true,
   "publishConfig": {
     "access": "public"
   },
-  "repository": "escapace/setup-nomad.git",
+  "repository": "escapace/action-setup-nomad",
   "scripts": {
     "build": "node ./scripts/build.mjs",
     "lint": "ls-lint && eslint 'src/**/*.ts'",

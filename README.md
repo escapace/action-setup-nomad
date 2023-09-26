@@ -1,4 +1,4 @@
-## setup-nomad
+## action-setup-nomad
 
 Sets up HashiCorp Nomad.
 
@@ -14,7 +14,7 @@ latest version of Nomad. Defaults to `latest`.
 ### Example usage
 
 ```yaml
-uses: escapace/setup-nomad@v0.2.0
+uses: escapace/action-setup-nomad@v0.2.0
 with:
   nomad-version: ~1.3.1
 ```
