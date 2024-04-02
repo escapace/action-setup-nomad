@@ -10,21 +10,21 @@
   "devDependencies": {
     "@actions/core": "1.10.1",
     "@actions/tool-cache": "2.0.1",
-    "@commitlint/cli": "18.6.1",
-    "@commitlint/config-conventional": "18.6.2",
+    "@commitlint/cli": "19.2.1",
+    "@commitlint/config-conventional": "19.1.0",
     "@hashicorp/js-releases": "1.7.2",
-    "@ls-lint/ls-lint": "2.2.2",
-    "@types/chai": "4.3.11",
+    "@ls-lint/ls-lint": "2.2.3",
+    "@types/chai": "4.3.14",
     "@types/lodash-es": "4.17.12",
     "@types/mocha": "10.0.6",
-    "@types/node": "20.11.19",
-    "@typescript-eslint/eslint-plugin": "7.0.2",
-    "@typescript-eslint/parser": "7.0.2",
+    "@types/node": "20.12.2",
+    "@typescript-eslint/eslint-plugin": "7.5.0",
+    "@typescript-eslint/parser": "7.5.0",
     "arg": "5.0.2",
     "c8": "9.1.0",
     "chai": "5.1.0",
-    "esbuild": "0.20.1",
-    "eslint": "8.56.0",
+    "esbuild": "0.20.2",
+    "eslint": "8.57.0",
     "eslint-config-escapace": "3.19.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-editorconfig": "4.0.3",
@@ -36,16 +36,16 @@
     "is-ci": "3.0.1",
     "lint-staged": "15.2.2",
     "lodash-es": "4.17.21",
-    "mocha": "10.3.0",
+    "mocha": "10.4.0",
     "prettier": "3.2.5",
     "prettier-config-escapace": "1.0.6",
     "semver": "7.6.0",
     "syncpack": "12.3.0",
-    "typescript": "5.3.3"
+    "typescript": "5.4.3"
   },
   "engines": {
-    "node": ">=20.11.1",
-    "pnpm": ">=8.15.1"
+    "node": ">=20.12.0",
+    "pnpm": ">=8.15.6"
   },
   "exports": {
     ".": {
@@ -67,7 +67,7 @@
   "scripts": {
     "build": "node ./scripts/build.mjs",
     "lint": "ls-lint && eslint 'src/**/*.ts'",
-    "prepare": "is-ci || husky install",
+    "prepare": "is-ci || husky",
     "test": "node ./scripts/test.mjs && c8 mocha --enable-source-maps 'lib/tests/**/*.spec.js'",
     "typecheck": "tsc --noEmit"
   },
