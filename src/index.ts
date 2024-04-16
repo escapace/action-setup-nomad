@@ -1,20 +1,20 @@
-import { debug, getInput, addPath, setFailed } from '@actions/core'
+import { addPath, debug, getInput, setFailed } from '@actions/core'
 import { downloadTool, extractZip, find } from '@actions/tool-cache'
 import { getRelease } from '@hashicorp/js-releases'
-import { isError, isString, isEmpty } from 'lodash-es'
-import os from 'os'
+import { isEmpty, isError, isString } from 'lodash-es'
+import os from 'node:os'
 
 const mapArch = (value: string): string =>
   ({
-    x32: '386',
     arm64: 'arm64',
+    x32: '386',
     x64: 'amd64'
-  }[value] ?? value)
+  })[value] ?? value
 
 const mapOS = (value: string): string =>
   ({
     win32: 'windows'
-  }[value] ?? value)
+  })[value] ?? value
 
 const USER_AGENT = 'escapace/setup-nomad'
 
