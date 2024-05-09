@@ -28,6 +28,12 @@ jobs:
           nomad-version: ${{ matrix.version }}
       - name: check version
         run: nomad --version
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        version:
+          - ~1.2.0
+          - latest
 
   release:
     if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
@@ -42,10 +48,3 @@ jobs:
         name: github release
         run: |
           gh release create ${{ github.ref_name }} --title ${{ github.ref_name }} --generate-notes
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        version:
-          - ~1.2.0
-          - latest
