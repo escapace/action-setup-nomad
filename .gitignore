@@ -1,7 +1,7 @@
 # NOTE: Don't modify this file. Place .gitignore files in relevant subdirectories.
 
-!lib/node
-!lib/types
+lib/*
+!lib/action
 
 # Logs
 logs

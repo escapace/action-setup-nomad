@@ -55,7 +55,7 @@
   "scripts": {
     "build": "tsx scripts/build.ts",
     "lint": "ls-lint --config .ls-lint.yaml && knip && eslint",
-    "pack": "pnpm exec pnpm-pack package --production --no-optional --extract --pack-destination lib/action && echo '!*' > lib/action/.gitignore",
+    "pack": "pnpm-pack package --production --no-optional --extract --pack-destination lib/action",
     "prepare": "lefthook install",
     "test": "vitest --no-watch --coverage",
     "typecheck": "tsc --noEmit"
