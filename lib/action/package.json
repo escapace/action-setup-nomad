@@ -1,0 +1,65 @@
+{
+  "name": "@escapace/action-setup-nomad",
+  "description": "",
+  "version": "0.0.0",
+  "author": {
+    "name": "escapace",
+    "email": "opensource@escapace.com"
+  },
+  "bugs": "https://github.com/escapace/action-setup-nomad/issues",
+  "dependencies": {
+    "@actions/core": "1.10.1",
+    "@actions/tool-cache": "2.0.1",
+    "@hashicorp/js-releases": "1.7.2"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "19.3.0",
+    "@commitlint/config-conventional": "19.2.2",
+    "@escapace/pnpm-pack": "0.4.1",
+    "@ls-lint/ls-lint": "2.2.3",
+    "@types/lodash-es": "4.17.12",
+    "@types/node": "20.12.11",
+    "@vitest/coverage-v8": "1.6.0",
+    "eslint": "9.2.0",
+    "eslint-config-escapace": "5.0.10",
+    "esroll": "0.1.1",
+    "knip": "5.13.0",
+    "lefthook": "1.6.10",
+    "lodash-es": "4.17.21",
+    "prettier": "3.2.5",
+    "prettier-config-escapace": "1.2.0",
+    "syncpack": "12.3.2",
+    "tsx": "4.9.3",
+    "typescript": "5.4.5",
+    "vitest": "1.6.0"
+  },
+  "engines": {
+    "node": ">=20.12.0",
+    "pnpm": ">=9.0.6"
+  },
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "import": "./lib/node/index.js"
+    }
+  },
+  "files": [
+    "lib/node",
+    "lib/types"
+  ],
+  "homepage": "https://github.com/escapace/action-setup-nomad#readme",
+  "license": "MPL-2.0",
+  "module": "./lib/node/index.js",
+  "private": true,
+  "repository": "escapace/action-setup-nomad",
+  "sideEffects": false,
+  "type": "module",
+  "types": "./lib/types/index.d.ts",
+  "scripts": {
+    "build": "tsx scripts/build.ts",
+    "lint": "ls-lint --config .ls-lint.yaml && knip && eslint",
+    "pack": "pnpm exec pnpm-pack package --production --no-optional --extract --pack-destination lib/action && echo '!*' > lib/action/.gitignore",
+    "test": "vitest --no-watch --coverage",
+    "typecheck": "tsc --noEmit"
+  }
+}

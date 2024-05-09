@@ -1,20 +1,20 @@
 {
-  "dependencyTypes": [
-    "dev",
-    "engines",
-    "local",
-    "overrides",
-    "peer",
-    "pnpmOverrides",
-    "prod",
-    "resolutions"
-  ],
   "customTypes": {
     "engines": {
       "path": "engines",
       "strategy": "versionsByName"
     }
   },
+  "dependencyTypes": [
+    "dev",
+    "overrides",
+    "peer",
+    "pnpmOverrides",
+    "prod",
+    "resolutions",
+    "local",
+    "engines"
+  ],
   "semverGroups": [
     {
       "dependencies": ["**"],
@@ -32,8 +32,15 @@
       "dependencies": ["**"],
       "dependencyTypes": ["prod"],
       "packages": ["**"],
-      "range": "^"
+      "range": ""
     }
   ],
-  "source": ["package.json"]
+  "source": ["package.json", "packages/*/package.json"],
+  "versionGroups": [
+    {
+      "dependencies": ["$LOCAL"],
+      "isIgnored": true,
+      "packages": ["**"]
+    }
+  ]
 }

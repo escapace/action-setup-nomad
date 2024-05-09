@@ -1,28 +1,24 @@
 name: release
 on:
-  push:
-    tags:
-      - 'v*'
-    branches:
-      - trunk
-    paths-ignore:
-      - README.md
-      - LICENSE
   pull_request:
     branches:
       - trunk
     paths-ignore:
       - README.md
       - LICENSE
+
+  push:
+    branches:
+      - trunk
+    paths-ignore:
+      - README.md
+      - LICENSE
+    tags:
+      - 'v*'
+
 jobs:
   test-latest:
     runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        version:
-          - ~1.2.0
-          - latest
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -32,16 +28,24 @@ jobs:
           nomad-version: ${{ matrix.version }}
       - name: check version
         run: nomad --version
+
   release:
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
     needs:
       - test-latest
     runs-on: ubuntu-latest
-    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: checkout
         uses: actions/checkout@v4
-      - name: github release
+      - env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name: github release
         run: |
           gh release create ${{ github.ref_name }} --title ${{ github.ref_name }} --generate-notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        version:
+          - ~1.2.0
+          - latest
