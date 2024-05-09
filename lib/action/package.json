@@ -58,7 +58,7 @@
   "scripts": {
     "build": "tsx scripts/build.ts",
     "lint": "ls-lint --config .ls-lint.yaml && knip && eslint",
-    "pack": "pnpm-pack package --production --no-optional --extract --pack-destination lib/action",
+    "pack": "pnpm-pack package --production --no-optional --extract --pack-destination lib/action && echo '!*' > lib/action/.gitignore",
     "test": "vitest --no-watch --coverage",
     "typecheck": "tsc --noEmit"
   }
