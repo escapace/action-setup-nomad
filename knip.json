@@ -11,7 +11,13 @@
     "{scripts,perf}/*.{js,cjs,mjs,jsx,ts,cts,mts,tsx}"
   ],
   "ignore": ["**/*.d.+([a-zA-Z0-9]).ts", "**/*.d.ts", "lib/**"],
-  "ignoreDependencies": ["@commitlint/cli", "prettier", "syncpack", "eslint-config-escapace"],
+  "ignoreDependencies": [
+    "@commitlint/cli",
+    "@microsoft/api-extractor",
+    "eslint-config-escapace",
+    "prettier",
+    "syncpack"
+  ],
   "ignoreExportsUsedInFile": {
     "interface": true,
     "type": true
