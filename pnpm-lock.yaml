@@ -43,8 +43,8 @@ importers:
         specifier: 9.2.0
         version: 9.2.0
       eslint-config-escapace:
-        specifier: 5.0.12
-        version: 5.0.12(eslint@9.2.0)(typescript@5.4.5)
+        specifier: 5.1.0
+        version: 5.1.0(eslint@9.2.0)(typescript@5.4.5)
       esroll:
         specifier: 0.1.1
         version: 0.1.1
@@ -61,8 +61,8 @@ importers:
         specifier: 3.2.5
         version: 3.2.5
       prettier-config-escapace:
-        specifier: 1.2.0
-        version: 1.2.0
+        specifier: 1.2.1
+        version: 1.2.1
       syncpack:
         specifier: 12.3.2
         version: 12.3.2(typescript@5.4.5)
@@ -1215,11 +1215,11 @@ packages:
     peerDependencies:
       eslint: '>=6.0.0'
 
-  eslint-config-escapace@5.0.12:
-    resolution: {integrity: sha512-tF9h+w1d2DX1zMr96GPHmGPjatYFOhhrWHH1+bCJId20KonfaxN2BTQ3UMtY27oqEw8pOrU82qbgaMzXBPtWpw==}
+  eslint-config-escapace@5.1.0:
+    resolution: {integrity: sha512-e3x4Z5W8h73Rm8vRuqQ44tHliPuEv/fLnuHlkSwkpSy/c5yVsoyA0YObiDMxv5MSK0gy3E/5ERA3GDLQql6jMQ==}
     engines: {node: '>=20.12.0', pnpm: '>=9.0.6'}
     peerDependencies:
-      eslint: '>=9.2.0'
+      eslint: '>=9.3.0'
 
   eslint-config-flat-gitignore@0.1.5:
     resolution: {integrity: sha512-hEZLwuZjDBGDERA49c2q7vxc8sCGv8EdBp6PQYzGOMcHIgrfG9YOM6s/4jx24zhD+wnK9AI8mgN5RxSss5nClQ==}
@@ -2169,8 +2169,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier-config-escapace@1.2.0:
-    resolution: {integrity: sha512-zcMZ1HQWZwaaSadnxOyR1oOHCvMnMZbop7UOtGISEqXbmY2l4Bdgr4HRU2j+OqSI6gTiX5wsZk/yIF0lvVg5rg==}
+  prettier-config-escapace@1.2.1:
+    resolution: {integrity: sha512-piOy4gQTfKum5UV8vnjdB3Ap0sCFtaOvTbo956JXOfpzrTONKb+hM5IO9APweRJPRv8cQFcoRD4hLmWSknJ0ng==}
 
   prettier@3.2.5:
     resolution: {integrity: sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==}
@@ -4040,7 +4040,7 @@ snapshots:
       eslint: 9.2.0
       semver: 7.6.1
 
-  eslint-config-escapace@5.0.12(eslint@9.2.0)(typescript@5.4.5):
+  eslint-config-escapace@5.1.0(eslint@9.2.0)(typescript@5.4.5):
     dependencies:
       '@stylistic/eslint-plugin': 2.1.0(eslint@9.2.0)(typescript@5.4.5)
       eslint: 9.2.0
@@ -5020,7 +5020,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-config-escapace@1.2.0: {}
+  prettier-config-escapace@1.2.1: {}
 
   prettier@3.2.5: {}
 
