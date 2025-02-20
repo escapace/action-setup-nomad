@@ -13,7 +13,7 @@
       "outdir": "lib/node",
       "platform": "node",
       "splitting": false,
-      "target": ["node20.15.0"]
+      "target": ["node20.18.0"]
     }
   }
 }
