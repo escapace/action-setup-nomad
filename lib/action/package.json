@@ -10,8 +10,8 @@
   "devDependencies": {
     "@actions/core": "1.11.1",
     "@actions/tool-cache": "2.0.2",
-    "@commitlint/cli": "19.7.1",
-    "@commitlint/config-conventional": "19.7.1",
+    "@commitlint/cli": "20.5.0",
+    "@commitlint/config-conventional": "20.5.0",
     "@escapace/pnpm-pack": "0.6.0",
     "@hashicorp/js-releases": "1.7.3",
     "@ls-lint/ls-lint": "2.2.3",
