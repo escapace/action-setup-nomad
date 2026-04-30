@@ -30,6 +30,12 @@ export interface ReleaseIndex {
 }
 
 export interface SetupNomadDependencies {
+  cacheTool: (
+    sourceDirectory: string,
+    toolName: string,
+    version: string,
+    arch: string,
+  ) => Promise<string>
   downloadTool: (url: string) => Promise<string>
   extractZip: (zipFile: string) => Promise<string>
   findTool: (toolName: string, version: string, arch: string) => string
@@ -46,6 +52,20 @@ export interface SetupNomadOptions extends SetupNomadDependencies {
 }
 
 const isEnterpriseVersion = (version: string): boolean => version.includes('+ent')
+
+const getToolCacheName = (version: string): string => {
+  if (!isEnterpriseVersion(version)) {
+    return PRODUCT
+  }
+
+  const variant = version
+    .slice(version.indexOf('+') + 1)
+    .replace(/^ent\b/u, 'enterprise')
+    .replaceAll(/[^a-z0-9]+/giu, '-')
+    .toLowerCase()
+
+  return `${PRODUCT}-${variant}`
+}
 
 export const mapArch = (value: string): string =>
   ({
@@ -156,7 +176,8 @@ export async function setupNomad(options: SetupNomadOptions): Promise<string> {
     throw new Error(`Nomad version ${options.version} not available for ${platform} and ${arch}`)
   }
 
-  let toolPath = options.findTool(PRODUCT, release.version, arch)
+  const toolCacheName = getToolCacheName(release.version)
+  let toolPath = options.findTool(toolCacheName, release.version, arch)
 
   if (toolPath.length === 0) {
     options.debug?.(`Downloading Nomad from ${build.url}`)
@@ -165,13 +186,15 @@ export async function setupNomad(options: SetupNomadOptions): Promise<string> {
 
     await release.verify(zipFile, build.filename)
 
-    toolPath = await options.extractZip(zipFile)
+    const extractedPath = await options.extractZip(zipFile)
 
-    options.debug?.(`Nomad path is ${toolPath}.`)
+    options.debug?.(`Nomad path is ${extractedPath}.`)
 
-    if (toolPath.length === 0) {
+    if (extractedPath.length === 0) {
       throw new Error(`Unable to download Nomad from ${build.url}`)
     }
+
+    toolPath = await options.cacheTool(extractedPath, toolCacheName, release.version, arch)
   }
 
   return toolPath

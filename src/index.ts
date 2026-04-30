@@ -1,5 +1,10 @@
 import { addPath, debug, getBooleanInput, getInput, setFailed } from '@actions/core'
-import { downloadTool, extractZip, find as findTool } from '@actions/tool-cache'
+import {
+  cacheDir as cacheTool,
+  downloadTool,
+  extractZip,
+  find as findTool,
+} from '@actions/tool-cache'
 import os from 'node:os'
 import { setupNomad } from './setup-nomad'
 
@@ -9,6 +14,7 @@ export async function run() {
   try {
     const toolPath = await setupNomad({
       arch: os.arch(),
+      cacheTool,
       debug,
       downloadTool,
       enterprise: getBooleanInput('enterprise'),

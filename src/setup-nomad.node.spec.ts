@@ -140,6 +140,15 @@ describe('setupNomad', () => {
       verify,
       version: '1.11.4',
     }
+    const cacheTool =
+      vi.fn<
+        (
+          sourceDirectory: string,
+          toolName: string,
+          version: string,
+          arch: string,
+        ) => Promise<string>
+      >()
     const downloadTool = vi.fn<(url: string) => Promise<string>>()
     const extractZip = vi.fn<(zipFile: string) => Promise<string>>()
     const findTool = vi.fn(() => '/opt/hostedtoolcache/nomad/1.11.4/amd64')
@@ -148,6 +157,7 @@ describe('setupNomad', () => {
     await expect(
       setupNomad({
         arch: 'x64',
+        cacheTool,
         downloadTool,
         enterprise: false,
         extractZip,
@@ -162,12 +172,13 @@ describe('setupNomad', () => {
     expect(getRelease).toHaveBeenCalledWith('~1.11.0', false, 'test-agent')
     expect(getBuild).toHaveBeenCalledWith('linux', 'amd64')
     expect(findTool).toHaveBeenCalledWith('nomad', '1.11.4', 'amd64')
+    expect(cacheTool).not.toHaveBeenCalled()
     expect(downloadTool).not.toHaveBeenCalled()
     expect(extractZip).not.toHaveBeenCalled()
     expect(verify).not.toHaveBeenCalled()
   })
 
-  it('downloads, verifies, and extracts Nomad when no cached tool path exists', async () => {
+  it('downloads, verifies, extracts, and caches Nomad when no cached tool path exists', async () => {
     const build = {
       filename: 'nomad_1.11.4+ent_windows_amd64.zip',
       url: 'https://releases.hashicorp.com/nomad/1.11.4+ent/nomad_1.11.4+ent_windows_amd64.zip',
@@ -179,6 +190,9 @@ describe('setupNomad', () => {
       verify,
       version: '1.11.4+ent',
     }
+    const cacheTool = vi.fn(
+      async () => await Promise.resolve('/opt/hostedtoolcache/nomad-enterprise/1.11.4/amd64'),
+    )
     const downloadTool = vi.fn(async () => await Promise.resolve('/tmp/nomad.zip'))
     const extractZip = vi.fn(async () => await Promise.resolve('/tmp/nomad'))
     const findTool = vi.fn(() => '')
@@ -186,6 +200,7 @@ describe('setupNomad', () => {
     await expect(
       setupNomad({
         arch: 'x64',
+        cacheTool,
         downloadTool,
         enterprise: true,
         extractZip,
@@ -195,11 +210,13 @@ describe('setupNomad', () => {
         version: '~1.11.0',
         getRelease: async () => await Promise.resolve(release),
       }),
-    ).resolves.toBe('/tmp/nomad')
+    ).resolves.toBe('/opt/hostedtoolcache/nomad-enterprise/1.11.4/amd64')
 
     expect(getBuild).toHaveBeenCalledWith('windows', 'amd64')
+    expect(findTool).toHaveBeenCalledWith('nomad-enterprise', '1.11.4+ent', 'amd64')
     expect(downloadTool).toHaveBeenCalledWith(build.url)
     expect(verify).toHaveBeenCalledWith('/tmp/nomad.zip', build.filename)
     expect(extractZip).toHaveBeenCalledWith('/tmp/nomad.zip')
+    expect(cacheTool).toHaveBeenCalledWith('/tmp/nomad', 'nomad-enterprise', '1.11.4+ent', 'amd64')
   })
 })
