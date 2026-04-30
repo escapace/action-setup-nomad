@@ -1,9 +1,18 @@
-name: release
+name: ci
 
 on:
+  pull_request:
+    branches:
+      - trunk
+    paths-ignore:
+      - README.md
+      - LICENSE
   push:
-    tags:
-      - 'v*'
+    branches:
+      - trunk
+    paths-ignore:
+      - README.md
+      - LICENSE
 
 permissions:
   contents: read
@@ -23,7 +32,6 @@ jobs:
     uses: escapace/workflows/.github/workflows/context.yaml@trunk
 
   continuous-integration:
-    if: needs.context.outputs.environment == 'production' || needs.context.outputs.environment == 'staging'
     needs:
       - context
     permissions:
@@ -40,7 +48,6 @@ jobs:
       version: ${{ needs.context.outputs.version }}
 
   action-smoke-test:
-    if: needs.context.outputs.environment == 'production' || needs.context.outputs.environment == 'staging'
     needs:
       - context
       - continuous-integration
@@ -65,17 +72,3 @@ jobs:
         version:
           - ~1.11.0
           - latest
-
-  release-github:
-    if: needs.context.outputs.environment == 'production' || needs.context.outputs.environment == 'staging'
-    needs:
-      - context
-      - continuous-integration
-      - action-smoke-test
-    permissions:
-      contents: write
-    uses: escapace/workflows/.github/workflows/release-github.yaml@trunk
-    with:
-      changelog: ${{ needs.context.outputs.changelog }}
-      prerelease: ${{ fromJSON(needs.context.outputs.prerelease) }}
-      version: ${{ needs.context.outputs.version }}
