@@ -1,78 +1,29 @@
-import { addPath, debug, getInput, setFailed } from '@actions/core'
-import { downloadTool, extractZip, find } from '@actions/tool-cache'
-import { getRelease } from '@hashicorp/js-releases'
-import { isEmpty, isError, isString } from 'es-toolkit/compat'
+import { addPath, debug, getBooleanInput, getInput, setFailed } from '@actions/core'
+import { downloadTool, extractZip, find as findTool } from '@actions/tool-cache'
 import os from 'node:os'
-
-const mapArch = (value: string): string =>
-  ({
-    arm64: 'arm64',
-    x32: '386',
-    x64: 'amd64',
-  })[value] ?? value
-
-const mapOS = (value: string): string =>
-  ({
-    win32: 'windows',
-  })[value] ?? value
+import { setupNomad } from './setup-nomad'
 
 const USER_AGENT = 'escapace/setup-nomad'
 
-async function download(url: string, verify: (zipFile: string) => Promise<void>) {
-  debug(`Downloading Nomad from ${url}`)
-
-  const zip = await downloadTool(url)
-
-  await verify(zip)
-
-  const pathToFile = await extractZip(zip)
-
-  debug(`Nomad path is ${pathToFile}.`)
-
-  if (!isString(zip) || !isString(pathToFile)) {
-    throw new Error(`Unable to download Nomad from ${url}`)
-  }
-
-  return pathToFile
-}
-
 export async function run() {
   try {
-    const version = getInput('nomad-version')
-    const platform = mapOS(os.platform())
-    const arch = mapArch(os.arch())
-
-    debug(`Finding releases for Nomad version ${version}`)
-
-    const release = await getRelease('nomad', version, USER_AGENT)
-
-    debug(`Getting build for Nomad version ${release.version}: ${platform} ${arch}`)
-
-    const build = release.getBuild(platform, arch)
-
-    // eslint-disable-next-line typescript/strict-boolean-expressions
-    if (!build) {
-      throw new Error(`Nomad version ${version} not available for ${platform} and ${arch}`)
-    }
-
-    let toolPath = find('nomad', release.version, arch)
-
-    if (!isString(toolPath) || isEmpty(toolPath)) {
-      toolPath = await download(
-        build.url,
-        async (zipFile: string) => await release.verify(zipFile, build.filename),
-      )
-    }
+    const toolPath = await setupNomad({
+      arch: os.arch(),
+      debug,
+      downloadTool,
+      enterprise: getBooleanInput('enterprise'),
+      extractZip,
+      findTool,
+      platform: os.platform(),
+      userAgent: USER_AGENT,
+      version: getInput('nomad-version'),
+    })
 
     addPath(toolPath)
   } catch (error) {
-    if (isError(error)) {
-      setFailed(error.message)
-    } else if (isString(error)) {
-      setFailed(error)
-    }
-
-    setFailed('Unknown Error')
+    setFailed(
+      error instanceof Error ? error.message : typeof error === 'string' ? error : 'Unknown Error',
+    )
   }
 }
 

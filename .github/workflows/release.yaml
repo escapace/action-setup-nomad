@@ -25,11 +25,13 @@ jobs:
       - name: setup
         uses: ./
         with:
+          enterprise: ${{ matrix.enterprise }}
           nomad-version: ${{ matrix.version }}
       - name: check version
         run: nomad --version
     strategy:
       matrix:
+        enterprise: [false, true]
         os: [ubuntu-latest, windows-latest, macos-latest]
         version:
           - ~1.11.0
