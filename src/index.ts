@@ -1,7 +1,7 @@
 import { addPath, debug, getInput, setFailed } from '@actions/core'
 import { downloadTool, extractZip, find } from '@actions/tool-cache'
 import { getRelease } from '@hashicorp/js-releases'
-import { isEmpty, isError, isString } from 'lodash-es'
+import { isEmpty, isError, isString } from 'es-toolkit/compat'
 import os from 'node:os'
 
 const mapArch = (value: string): string =>

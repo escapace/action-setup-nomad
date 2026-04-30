@@ -11,4 +11,4 @@ inputs:
 name: 'Setup HashiCorp Nomad'
 runs:
   main: 'lib/action/lib/node/index.js'
-  using: 'node20'
+  using: 'node24'

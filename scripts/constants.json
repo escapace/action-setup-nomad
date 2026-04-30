@@ -12,8 +12,15 @@
       "mainFields": ["module", "main"],
       "outdir": "lib/node",
       "platform": "node",
+      "sourcemap": false,
       "splitting": false,
-      "target": ["node20.18.0"]
+      "target": ["node24.15.0"]
     }
+  },
+  "declaration": {
+    "declarationRollup": true,
+    "documentation": true,
+    "entryPoints": ["src/index.ts"],
+    "tsconfig": "tsconfig-build.json"
   }
 }

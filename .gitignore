@@ -1,5 +1,7 @@
 # NOTE: Don't modify this file. Place .gitignore files in relevant subdirectories.
 
+.aider*
+
 lib/*
 !lib/action
 
