@@ -158,7 +158,9 @@ describe('setupNomad', () => {
       >()
     const downloadTool = vi.fn<(url: string) => Promise<string>>()
     const extractZip = vi.fn<(zipFile: string) => Promise<string>>()
-    const findTool = vi.fn(() => '/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64')
+    const findTool = vi.fn(
+      () => '/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64',
+    )
     const restoreActionsCache =
       vi.fn<(paths: string[], key: string) => Promise<string | undefined>>()
     const saveActionsCache = vi.fn<(paths: string[], key: string) => Promise<number>>()
@@ -182,10 +184,14 @@ describe('setupNomad', () => {
         getRelease: async () => await Promise.resolve(release),
         removePath: async () => await Promise.resolve(),
       }),
-    ).resolves.toBe('/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64')
+    ).resolves.toBe('/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64')
 
     expect(release.getBuild).toHaveBeenCalledWith('linux', 'amd64')
-    expect(findTool).toHaveBeenCalledWith('escapace-nomad', '1.11.4', 'amd64')
+    expect(findTool).toHaveBeenCalledWith(
+      'action-setup-nomad-tool-cache-community',
+      '1.11.4',
+      'amd64',
+    )
     expect(restoreActionsCache).not.toHaveBeenCalled()
     expect(saveActionsCache).not.toHaveBeenCalled()
     expect(cacheTool).not.toHaveBeenCalled()
@@ -210,7 +216,9 @@ describe('setupNomad', () => {
     const findTool = vi
       .fn<(...parameters: [string, string, string]) => string>()
       .mockReturnValueOnce('')
-      .mockReturnValueOnce('/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64')
+      .mockReturnValueOnce(
+        '/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64',
+      )
     const removePath = vi.fn(async () => await Promise.resolve())
     const restoreActionsCache = vi.fn(async () => await Promise.resolve('nomad-cache-key'))
     const saveActionsCache = vi.fn<(paths: string[], key: string) => Promise<number>>()
@@ -234,18 +242,20 @@ describe('setupNomad', () => {
         actionsCacheFeatureAvailable: () => true,
         getRelease: async () => await Promise.resolve(release),
       }),
-    ).resolves.toBe('/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64')
+    ).resolves.toBe('/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64')
 
-    expect(removePath).toHaveBeenCalledWith('/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64')
     expect(removePath).toHaveBeenCalledWith(
-      '/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64.complete',
+      '/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64',
+    )
+    expect(removePath).toHaveBeenCalledWith(
+      '/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64.complete',
     )
     expect(restoreActionsCache).toHaveBeenCalledWith(
       [
-        '/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64',
-        '/opt/hostedtoolcache/escapace-nomad/1.11.4/amd64.complete',
+        '/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64',
+        '/opt/hostedtoolcache/action-setup-nomad-tool-cache-community/1.11.4/amd64.complete',
       ],
-      'action-setup-nomad-tool-cache-escapace-nomad-1.11.4-linux-amd64',
+      'action-setup-nomad-tool-cache-community-1.11.4-linux-amd64',
     )
     expect(downloadTool).not.toHaveBeenCalled()
     expect(cacheTool).not.toHaveBeenCalled()
@@ -260,7 +270,9 @@ describe('setupNomad', () => {
     const release = createRelease('1.11.4+ent', build)
     const cacheTool = vi.fn(
       async () =>
-        await Promise.resolve('/opt/hostedtoolcache/escapace-nomad-enterprise/1.11.4/amd64'),
+        await Promise.resolve(
+          '/opt/hostedtoolcache/action-setup-nomad-tool-cache-enterprise/1.11.4/amd64',
+        ),
     )
     const downloadTool = vi.fn(async () => await Promise.resolve('/tmp/nomad.zip'))
     const extractZip = vi.fn(async () => await Promise.resolve('/tmp/nomad'))
@@ -287,25 +299,29 @@ describe('setupNomad', () => {
         getRelease: async () => await Promise.resolve(release),
         removePath: async () => await Promise.resolve(),
       }),
-    ).resolves.toBe('/opt/hostedtoolcache/escapace-nomad-enterprise/1.11.4/amd64')
+    ).resolves.toBe('/opt/hostedtoolcache/action-setup-nomad-tool-cache-enterprise/1.11.4/amd64')
 
     expect(release.getBuild).toHaveBeenCalledWith('windows', 'amd64')
-    expect(findTool).toHaveBeenCalledWith('escapace-nomad-enterprise', '1.11.4+ent', 'amd64')
+    expect(findTool).toHaveBeenCalledWith(
+      'action-setup-nomad-tool-cache-enterprise',
+      '1.11.4+ent',
+      'amd64',
+    )
     expect(downloadTool).toHaveBeenCalledWith(build.url)
     expect(release.verify).toHaveBeenCalledWith('/tmp/nomad.zip', build.filename)
     expect(extractZip).toHaveBeenCalledWith('/tmp/nomad.zip')
     expect(cacheTool).toHaveBeenCalledWith(
       '/tmp/nomad',
-      'escapace-nomad-enterprise',
+      'action-setup-nomad-tool-cache-enterprise',
       '1.11.4+ent',
       'amd64',
     )
     expect(saveActionsCache).toHaveBeenCalledWith(
       [
-        '/opt/hostedtoolcache/escapace-nomad-enterprise/1.11.4/amd64',
-        '/opt/hostedtoolcache/escapace-nomad-enterprise/1.11.4/amd64.complete',
+        '/opt/hostedtoolcache/action-setup-nomad-tool-cache-enterprise/1.11.4/amd64',
+        '/opt/hostedtoolcache/action-setup-nomad-tool-cache-enterprise/1.11.4/amd64.complete',
       ],
-      'action-setup-nomad-tool-cache-escapace-nomad-enterprise-1.11.4-windows-amd64',
+      'action-setup-nomad-tool-cache-enterprise-1.11.4-windows-amd64',
     )
   })
 })

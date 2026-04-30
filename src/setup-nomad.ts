@@ -70,19 +70,20 @@ export interface SetupNomadOptions extends SetupNomadDependencies {
 
 const isEnterpriseVersion = (version: string): boolean => version.includes('+ent')
 
-const getToolCacheName = (version: string): string => {
+const getToolCacheVariant = (version: string): string => {
   if (!isEnterpriseVersion(version)) {
-    return `escapace-${PRODUCT}`
+    return 'community'
   }
 
-  const variant = version
+  return version
     .slice(version.indexOf('+') + 1)
     .replace(/^ent\b/u, 'enterprise')
     .replaceAll(/[^a-z0-9]+/giu, '-')
     .toLowerCase()
-
-  return `escapace-${PRODUCT}-${variant}`
 }
+
+const getToolCacheName = (version: string): string =>
+  `${ACTIONS_CACHE_KEY_PREFIX}-${getToolCacheVariant(version)}`
 
 const getToolCacheVersion = (version: string): string => semver.clean(version) ?? version
 
@@ -97,13 +98,14 @@ const getToolCachePaths = (
   return [toolDirectory, `${toolDirectory}.complete`]
 }
 
-const getActionsCacheKey = (
-  toolCacheName: string,
-  version: string,
-  platform: string,
-  arch: string,
-): string =>
-  [ACTIONS_CACHE_KEY_PREFIX, toolCacheName, getToolCacheVersion(version), platform, arch].join('-')
+const getActionsCacheKey = (version: string, platform: string, arch: string): string =>
+  [
+    ACTIONS_CACHE_KEY_PREFIX,
+    getToolCacheVariant(version),
+    getToolCacheVersion(version),
+    platform,
+    arch,
+  ].join('-')
 
 const getErrorMessage = (error: unknown): string =>
   error instanceof Error ? error.message : typeof error === 'string' ? error : 'Unknown error'
@@ -278,7 +280,7 @@ export async function setupNomad(options: SetupNomadOptions): Promise<string> {
     release.version,
     arch,
   )
-  const actionsCacheKey = getActionsCacheKey(toolCacheName, release.version, platform, arch)
+  const actionsCacheKey = getActionsCacheKey(release.version, platform, arch)
   let toolPath = options.findTool(toolCacheName, release.version, arch)
 
   if (toolPath.length === 0) {
