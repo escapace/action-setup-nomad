@@ -1,25 +1,32 @@
 ## action-setup-nomad
 
-Sets up HashiCorp Nomad.
+Install the HashiCorp Nomad CLI in GitHub Actions and add the selected community or Enterprise binary to `PATH`.
+
+When a matching version was installed by this action before, the cached installation is reused.
+
+```yaml
+uses: escapace/action-setup-nomad@v1.0.0
+with:
+  nomad-version: ~1.3.1
+```
 
 ### Inputs
 
-#### `enterprise`
-
-**Optional** Whether to install Nomad Enterprise instead of community releases. Defaults to `false`.
-
 #### `nomad-version`
 
-**Optional** The version of Nomad to install. Instead of full version string you
-can also specify a semantic version range (for example `^1.3.1`) to install the
-latest version satisfying the constraint. A value of `latest` will install the
-latest version of Nomad. Defaults to `latest`.
+Version or semantic version range to install. Use `latest` for the latest community release, or for the latest Enterprise release when `enterprise` is `true`.
 
-### Example usage
+Default: `latest`
+
+#### `enterprise`
+
+Install a Nomad Enterprise release instead of a community release.
+
+Default: `false`
 
 ```yaml
-uses: escapace/action-setup-nomad@v0.2.0
+uses: escapace/action-setup-nomad@v1.0.0
 with:
-  enterprise: false
-  nomad-version: ~1.3.1
+  enterprise: true
+  nomad-version: ^1.11.0
 ```
