@@ -1,8 +1,10 @@
 import { Release } from '@hashicorp/js-releases'
+import path from 'node:path'
 import semver from 'semver'
 
 const PRODUCT = 'nomad'
 const RELEASES_URL = 'https://releases.hashicorp.com'
+const ACTIONS_CACHE_KEY_PREFIX = 'action-setup-nomad-tool-cache'
 
 export interface NomadBuild {
   filename: string
@@ -29,6 +31,10 @@ export interface ReleaseIndex {
   versions: Record<string, ReleaseMetadata>
 }
 
+export interface ActionsCacheRestoreOptions {
+  lookupOnly?: boolean
+}
+
 export interface SetupNomadDependencies {
   cacheTool: (
     sourceDirectory: string,
@@ -39,14 +45,25 @@ export interface SetupNomadDependencies {
   downloadTool: (url: string) => Promise<string>
   extractZip: (zipFile: string) => Promise<string>
   findTool: (toolName: string, version: string, arch: string) => string
+  removePath: (targetPath: string) => Promise<void>
+  actionsCacheFeatureAvailable?: () => boolean
   debug?: (message: string) => void
   getRelease?: (version: string, enterprise: boolean, userAgent: string) => Promise<NomadRelease>
+  restoreActionsCache?: (
+    paths: string[],
+    key: string,
+    restoreKeys?: string[],
+    options?: ActionsCacheRestoreOptions,
+  ) => Promise<string | undefined>
+  saveActionsCache?: (paths: string[], key: string) => Promise<number>
 }
 
 export interface SetupNomadOptions extends SetupNomadDependencies {
+  actionsCacheEnabled: boolean
   arch: string
   enterprise: boolean
   platform: string
+  toolCacheRoot: string
   userAgent: string
   version: string
 }
@@ -55,7 +72,7 @@ const isEnterpriseVersion = (version: string): boolean => version.includes('+ent
 
 const getToolCacheName = (version: string): string => {
   if (!isEnterpriseVersion(version)) {
-    return PRODUCT
+    return `escapace-${PRODUCT}`
   }
 
   const variant = version
@@ -64,7 +81,85 @@ const getToolCacheName = (version: string): string => {
     .replaceAll(/[^a-z0-9]+/giu, '-')
     .toLowerCase()
 
-  return `${PRODUCT}-${variant}`
+  return `escapace-${PRODUCT}-${variant}`
+}
+
+const getToolCacheVersion = (version: string): string => semver.clean(version) ?? version
+
+const getToolCachePaths = (
+  toolCacheRoot: string,
+  toolCacheName: string,
+  version: string,
+  arch: string,
+): string[] => {
+  const toolDirectory = path.join(toolCacheRoot, toolCacheName, getToolCacheVersion(version), arch)
+
+  return [toolDirectory, `${toolDirectory}.complete`]
+}
+
+const getActionsCacheKey = (
+  toolCacheName: string,
+  version: string,
+  platform: string,
+  arch: string,
+): string =>
+  [ACTIONS_CACHE_KEY_PREFIX, toolCacheName, getToolCacheVersion(version), platform, arch].join('-')
+
+const getErrorMessage = (error: unknown): string =>
+  error instanceof Error ? error.message : typeof error === 'string' ? error : 'Unknown error'
+
+const isActionsCacheAvailable = (options: SetupNomadOptions): boolean => {
+  if (!options.actionsCacheEnabled || options.toolCacheRoot.length === 0) {
+    return false
+  }
+
+  try {
+    return options.actionsCacheFeatureAvailable?.() ?? false
+  } catch (error) {
+    options.debug?.(`Unable to check GitHub Actions cache availability: ${getErrorMessage(error)}`)
+
+    return false
+  }
+}
+
+const tryRestoreActionsCache = async (
+  options: SetupNomadOptions,
+  paths: string[],
+  key: string,
+): Promise<void> => {
+  if (!isActionsCacheAvailable(options) || options.restoreActionsCache === undefined) {
+    return
+  }
+
+  try {
+    await Promise.all(paths.map(async (targetPath) => await options.removePath(targetPath)))
+
+    const restoredKey = await options.restoreActionsCache?.(paths, key)
+
+    options.debug?.(
+      restoredKey === undefined
+        ? `No GitHub Actions cache found for ${key}`
+        : `Restored GitHub Actions cache ${restoredKey}`,
+    )
+  } catch (error) {
+    options.debug?.(`Unable to restore GitHub Actions cache ${key}: ${getErrorMessage(error)}`)
+  }
+}
+
+const trySaveActionsCache = async (
+  options: SetupNomadOptions,
+  paths: string[],
+  key: string,
+): Promise<void> => {
+  if (!isActionsCacheAvailable(options) || options.saveActionsCache === undefined) {
+    return
+  }
+
+  try {
+    await options.saveActionsCache(paths, key)
+  } catch (error) {
+    options.debug?.(`Unable to save GitHub Actions cache ${key}: ${getErrorMessage(error)}`)
+  }
 }
 
 export const mapArch = (value: string): string =>
@@ -177,7 +272,20 @@ export async function setupNomad(options: SetupNomadOptions): Promise<string> {
   }
 
   const toolCacheName = getToolCacheName(release.version)
+  const actionsCachePaths = getToolCachePaths(
+    options.toolCacheRoot,
+    toolCacheName,
+    release.version,
+    arch,
+  )
+  const actionsCacheKey = getActionsCacheKey(toolCacheName, release.version, platform, arch)
   let toolPath = options.findTool(toolCacheName, release.version, arch)
+
+  if (toolPath.length === 0) {
+    await tryRestoreActionsCache(options, actionsCachePaths, actionsCacheKey)
+
+    toolPath = options.findTool(toolCacheName, release.version, arch)
+  }
 
   if (toolPath.length === 0) {
     options.debug?.(`Downloading Nomad from ${build.url}`)
@@ -195,6 +303,8 @@ export async function setupNomad(options: SetupNomadOptions): Promise<string> {
     }
 
     toolPath = await options.cacheTool(extractedPath, toolCacheName, release.version, arch)
+
+    await trySaveActionsCache(options, actionsCachePaths, actionsCacheKey)
   }
 
   return toolPath

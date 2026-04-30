@@ -24,6 +24,12 @@ Install a Nomad Enterprise release instead of a community release.
 
 Default: `false`
 
+#### `cache`
+
+Persist installed Nomad versions with the GitHub Actions cache.
+
+Default: `true`
+
 ```yaml
 uses: escapace/action-setup-nomad@v1.0.0
 with:

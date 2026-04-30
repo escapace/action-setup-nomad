@@ -4,6 +4,10 @@ branding:
   icon: 'terminal'
 description: 'Sets up HashiCorp Nomad in your GitHub Actions workflow.'
 inputs:
+  cache:
+    default: 'true'
+    description: 'Whether to persist installed Nomad versions with the GitHub Actions cache service. Defaults to `true`.'
+    required: false
   enterprise:
     default: 'false'
     description: 'Whether to install Nomad Enterprise instead of community releases. Defaults to `false`.'
