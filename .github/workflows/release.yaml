@@ -22,7 +22,7 @@ jobs:
       statuses: read
     uses: escapace/workflows/.github/workflows/context.yaml@trunk
 
-  continuous-integration:
+  typescript-checks:
     if: needs.context.outputs.environment == 'production' || needs.context.outputs.environment == 'staging'
     needs:
       - context
@@ -43,8 +43,17 @@ jobs:
     if: needs.context.outputs.environment == 'production' || needs.context.outputs.environment == 'staging'
     needs:
       - context
-      - continuous-integration
+      - typescript-checks
     runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        enterprise: [false, true]
+        os: [ubuntu-latest]
+        version:
+          - ~1.11.0
+          - latest
+
     steps:
       - name: checkout
         uses: actions/checkout@v6
@@ -57,21 +66,27 @@ jobs:
           nomad-version: ${{ matrix.version }}
       - name: check version
         run: nomad --version
-    strategy:
-      fail-fast: false
-      matrix:
-        enterprise: [false, true]
-        os: [ubuntu-latest]
-        version:
-          - ~1.11.0
-          - latest
+
+  continuous-integration:
+    if: ${{ always() && (needs.context.outputs.environment == 'production' || needs.context.outputs.environment == 'staging') }}
+    needs:
+      - context
+      - typescript-checks
+      - action-smoke-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: fail if any required job did not succeed
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}
+        run: exit 1
+      - name: pass if all required jobs succeeded
+        if: ${{ !(contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped')) }}
+        run: exit 0
 
   release-github:
     if: needs.context.outputs.environment == 'production' || needs.context.outputs.environment == 'staging'
     needs:
       - context
       - continuous-integration
-      - action-smoke-test
     permissions:
       contents: write
     uses: escapace/workflows/.github/workflows/release-github.yaml@trunk
